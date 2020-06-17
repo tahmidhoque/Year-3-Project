@@ -8,8 +8,7 @@ University Of Surrey Electronic Engineering Year 3 Project On Facial Obfuscation
 * numpy version 1.18.1 or above
 
 You will also need a caffe model file for the SSD detector and a prototxt file
-you will also need a a face landmark predictor which can be found here:
-"https: //github.com/tahmidhoque/Year-3-Project"
+you will also need a a face landmark predictor which can be found in this repository
 
 ## HOW TO INSTALL DEPENDANCIES
 
@@ -32,4 +31,4 @@ if you have python 3 and python 2 install on the same system
 * --predictor : File path to face landmark predictor
 * --model : File path to the Caffe model
 * --prototxt : File path to prototxt for the ConvNet
-* --threshold : Threshold for the face detection 
+* --threshold : Threshold for the face detection
