@@ -6,24 +6,12 @@ import argparse
 import random
 import string
 
-def extract_index_nparray(nparray):
+def getFLIndex(nparray):
     index = None
     for num in nparray[0]:
         index = num
         break
     return index
-
-def getLandmarkPoints(img_gray,upsample):
-    faces = detector(img_gray,upsample)
-    for face in faces:
-        face = face.rect
-        landmarkPoints = []
-        landmarks = predictor(img_gray,face)
-        for n in range(0,68):
-            x = landmarks.part(n).x
-            y = landmarks.part(n).y
-            landmarkPoints.append((x,y))
-        return landmarkPoints
 
 def dnnLandmarks(image,gray,h,w):
     # https://docs.opencv.org/trunk/d6/d0f/group__dnn.html#ga29f34df9376379a603acd8df581ac8d7
@@ -87,7 +75,7 @@ if __name__ == '__main__':
     srcLandmarkPoints = dnnLandmarks(srcImg,srcImgGray,srcImgHeight,srcImgWidth)
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter('noMouth.mp4',fourcc, fps, (vidWidth,vidHeight))
+    out = cv2.VideoWriter('test4.mp4',fourcc, fps, (vidWidth,vidHeight))
     framesnum = 0
     missedFrames = 0
 
@@ -130,49 +118,16 @@ if __name__ == '__main__':
 
                 #Get which point the triangle point is in terms of the landmark index
                 indexpointOne = np.where((srcPoints == pointOne).all(axis=1))
-                indexpointOne = extract_index_nparray(indexpointOne)
+                indexpointOne = getFLIndex(indexpointOne)
 
                 indexpointTwo = np.where((srcPoints == pointTwo).all(axis=1))
-                indexpointTwo = extract_index_nparray(indexpointTwo)
+                indexpointTwo = getFLIndex(indexpointTwo)
 
                 indexpointThree = np.where((srcPoints == pointThree).all(axis=1))
-                indexpointThree = extract_index_nparray(indexpointThree)
+                indexpointThree = getFLIndex(indexpointThree)
 
                 #check that the points are valid and an actual triangle
                 if indexpointOne is not None and indexpointTwo is not None and indexpointThree is not None:
-                    # templist = set()
-                    # templist.add(int(indexpointOne))
-                    # templist.add(int(indexpointTwo))
-                    # templist.add(int(indexpointThree))
-                    #
-                    # if templist == {49,61,59}:
-                    #
-                    #     continue
-                    # elif templist == {49,60,59}:
-                    #
-                    #     continue
-                    # elif templist == {59,67,61}:
-                    #
-                    #     continue
-                    # elif templist == {61,62,67}:
-                    #
-                    #     continue
-                    # elif templist == {62,67,66}:
-                    #
-                    #     continue
-                    # elif templist == {66,65,62}:
-                    #
-                    #     continue
-                    # elif templist == {62,63,65}:
-                    #
-                    #     continue
-                    # elif templist == {63,65,55}:
-                    #
-                    #     continue
-                    # elif templist == {63,53,55}:
-                    #
-                    #     continue
-                    # else:
                     triangle = [indexpointOne, indexpointTwo, indexpointThree]
                     triangleIndexes.append(triangle)
 
@@ -240,7 +195,6 @@ if __name__ == '__main__':
                 destImgNewFaceRect = cv2.add(destImgNewFaceRect, warpedTriangle)
                 destImgNewFace[y: y + h, x: x + w] = destImgNewFaceRect
 
-            # Face swapped (putting 1st face into 2nd face)
             destImgFaceMask = np.zeros_like(destImgGray)
             destImgHeadMask = cv2.fillConvexPoly(destImgFaceMask, destfacePolygon, 255)
             destImgFaceMask = cv2.bitwise_not(destImgHeadMask)
