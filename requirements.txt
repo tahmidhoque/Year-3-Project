@@ -1,5 +1,5 @@
 dlib==19.19.0
 numpy==1.18.1
 opencv-python==4.2.0.32
-opencv-python-headless==4.2.0.34
+opencv-python-headless==4.8.1.78
 
